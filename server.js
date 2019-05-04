@@ -1,5 +1,6 @@
 var http = require('http');
 const express = require('express');
+const app = express();
 var router = express.Router();
 var eBay = require('ebay-node-api');
 
@@ -115,24 +116,35 @@ function calculatePrice(searchTerm, res){
 //     searchTerm = req.params.search;
 //     calculatePrice(searchTerm,res);
 //    });
+app.get('/',(req,res)=>{
 
-http.createServer((req,res)=>{
-    if (req.url==='/') {
-        console.log("inside the locatl" + req.url)
-    res.writeHead(404,{'Content-Type': 'application/json'});
-    var jsonObj = {
-        error : 'not found',
-    };
-    res.end(JSON.stringify(jsonObj));
-    }
-    if(req.url !='/'){
-        console.log("Outside the locatl" + req.url);
-        searchTerm = "iphone 6";
-        calculatePrice(searchTerm,res);
+    res.send('Hello World');
+
+});
+
+app.listen(3000,()=>{
+    console.log('listening on port 3000')
+})
+
+// http.createServer((req,res)=>{
+//     if (req.url==='/') {
+//         console.log("inside the locatl" + req.url)
+//     res.writeHead(404,{'Content-Type': 'application/json'});
+//     var jsonObj = {
+//         error : 'not found',
+//     };
+//     res.end(JSON.stringify(jsonObj));
+//     }
+//     if(req.url !='/'){
+//         console.log("Outside the locatl" + req.url);
+//         searchTerm = "iphone 6";
+//         calculatePrice(searchTerm,res);
        
         
-    }
-}).listen(3000);
+//     }
+// }).listen(3000);
+
+
 
 
 
