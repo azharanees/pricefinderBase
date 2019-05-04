@@ -3,20 +3,22 @@ const express = require('express');
 var router = express.Router();
 var eBay = require('ebay-node-api');
 
+
 let ebay = new eBay({
     clientID: "pricefin-pricefin-PRD-bf2cd4cf7-bca5e5ee",
     limit:20,// fetches top 10 results in form of JSON.
     env: "PRODUCTION" // optional default = "PRODUCTION"
 });
 
-var searchTerm;
+var searchTerm = "iphone 6";
 
-router.get('/:search', function(req,res, next){
-    console.log('requested url: ' + req.url);
-    console.log('requested item: ' + req.params.search);
-    searchTerm = req.params.search;
-    calculatePrice(searchTerm,res);
-   });
+
+// router.get('/:search', function(req,res, next){
+//     console.log('requested url: ' + req.url);
+//     console.log('requested item: ' + req.params.search);
+//     searchTerm = req.params.search;
+//     calculatePrice(searchTerm,res);
+//    });
 
 
 function calculatePrice(searchTerm, res){
@@ -113,6 +115,14 @@ function calculatePrice(searchTerm, res){
 //     res.end(JSON.stringify(jsonObj));
     
 //     }
-http.createServer(router).listen(3000);
+http.createServer(function(req,res){
+    var body = "redirecting";
+    res.writeHead(301,{
+        'Content-Type' : 'text/plain',
+        'Location' : 'http//:www.google.com',
+        'Content-Length' : body.length
+    });
+    res.end();
+}).listen(3000);
 
 console.log("server is running");

@@ -9,14 +9,9 @@ let ebay = new eBay({
     env: "PRODUCTION" // optional default = "PRODUCTION"
 });
 
-var searchTerm;
+var searchTerm = "iphone 6";
 
-router.get('/:search', function(req,res, next){
-    console.log('requested url: ' + req.url);
-    console.log('requested item: ' + req.params.search);
-    searchTerm = req.params.search;
-    calculatePrice(searchTerm,res);
-   });
+
 
 
 function calculatePrice(searchTerm, res){
@@ -113,6 +108,32 @@ function calculatePrice(searchTerm, res){
 //     res.end(JSON.stringify(jsonObj));
     
 //     }
-http.createServer(router).listen(3000);
+
+// http.get('/:search', function(req,res, next){
+//     console.log('requested url: ' + req.url);
+//     console.log('requested item: ' + req.params.search);
+//     searchTerm = req.params.search;
+//     calculatePrice(searchTerm,res);
+//    });
+
+http.createServer((req,res)=>{
+    if (req.url==='/') {
+        console.log("inside the locatl" + req.url)
+    res.writeHead(404,{'Content-Type': 'application/json'});
+    var jsonObj = {
+        error : 'not found',
+    };
+    res.end(JSON.stringify(jsonObj));
+    }
+    if(req.url !='/'){
+        console.log("Outside the locatl" + req.url);
+        searchTerm = "iphone 6";
+        calculatePrice(searchTerm,res);
+       
+        
+    }
+}).listen(3000);
+
+
 
 console.log("server is running");
