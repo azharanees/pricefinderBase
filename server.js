@@ -122,8 +122,17 @@ app.get('/',(req,res)=>{
 
 });
 
-app.listen(8080,()=>{
-    console.log('listening on port 8080')
+app.get('/api/getprice/:item',(req,res)=>{
+
+        searchTerm = req.params.item;
+        console.log(searchTerm);
+         calculatePrice(searchTerm,res);
+
+})
+const port = process.env.PORT || 4400;
+
+app.listen(port,()=>{
+    console.log(`Listening on port ${port}...`)
 })
 
 // http.createServer((req,res)=>{
