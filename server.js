@@ -183,15 +183,15 @@ app.get('/api/getprice/:item',(req,res)=>{
 });
 
 app.post('/api/getprediction',(req,res)=>{
-    console.log(req.body);
+    console.log();
    // res.write("getpredictionworking");
     predictPrice(searchTerm,res);
 
 });
 
 app.post('/api/getPredictionForLink',(req,res)=>{
-    console.log((req.body));
-    res.write("Predicting Price....")
+    console.log(req.body);
+    res.end("Predicting Price....")
 })
 
 const port = process.env.PORT || 3000;
