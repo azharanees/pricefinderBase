@@ -254,7 +254,7 @@ app.post('/api/getprediction',(req,res)=>{
 
 });
 
-app.post('/api/getPredictionForLink/:prodId',(req,res)=>{
+app.get('/api/getPredictionForLink/:prodId',(req,res)=>{
     console.log(req.params.prodId);
     if(!req.params.prodId){
         res.writeHead(400,'Bad Request product id is missing');
