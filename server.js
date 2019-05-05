@@ -9,7 +9,8 @@ const axios = require('axios')
 let ebay = new eBay({
     clientID: "pricefin-pricefin-PRD-bf2cd4cf7-bca5e5ee",
     limit:20,// fetches top 10 results in form of JSON.
-    env: "PRODUCTION" // optional default = "PRODUCTION"
+    env: "PRODUCTION" // optional default = "PRODUCTION",
+
 });
 
 var searchTerm = "iphone 6";
@@ -99,6 +100,62 @@ function calculatePrice(searchTerm, res){
     console.log(error);
 });
 }
+
+function getItemFromLink(link,res){
+    let ebay = new eBay({
+        clientID: "pricefin-pricefin-PRD-bf2cd4cf7-bca5e5ee",
+     limit:1,// fetches top 10 results in form of JSON.
+        env: "PRODUCTION" // optional default = "PRODUCTION"
+    });
+
+
+    var desc = "";
+    ebay.findItemsByKeywords(link).then((data) => {
+        jsonRes = data;
+        // var item["@count"] = "";
+        
+       // console.log(JSON.stringify(data));
+    var itemCount = 0;
+        for(var searchResult in jsonRes[0].searchResult[0].item){
+            desc = (jsonRes[0].searchResult[0].item[0].title[0]);
+            console.log(JSON.stringify(desc));
+    
+            // prices = (JSON.stringify(jsonRes[0].searchResult[0].item[0].sellingStatus[0].currentPrice[0].__value__));
+            // var fPrice = parseFloat(prices.replace(/"/g,''));
+           // console.log((fPrice));
+         
+        }
+        res.end(JSON.stringify({
+            description : desc
+        }));
+
+    });
+  
+ 
+
+
+
+// let ebay = new Ebay({
+//     clientID: "pricefin-pricefin-SBX-ba6d0a603-45cc6d17",
+//     clientSecret: 'SBX-a6d0a603dc13-b769-4a59-b2b1-82ad',
+//         body: {
+//             grant_type: "client_credentials"
+//         }
+// });
+
+
+//     ebay.getAccessToken()
+//     .then((data) => {
+//         ebay.getItem('v1|202117468662|0').then((data) => {
+//             console.log(data);
+//             // Data is in format of JSON
+//             // To check the format of Data, Go to this url (https://jsonblob.com/56cbea67-30b8-11e8-953c-5d1886dcf4a0)
+//         })
+//     });
+
+}
+
+
 
 
 function predictPrice(searchTerm,resp){
@@ -197,9 +254,20 @@ app.post('/api/getprediction',(req,res)=>{
 
 });
 
-app.post('/api/getPredictionForLink',(req,res)=>{
-    console.log(req.body);
-    res.end("Predicting Price....")
+app.post('/api/getPredictionForLink/:prodId',(req,res)=>{
+    console.log(req.params.prodId);
+    if(!req.params.prodId){
+        res.writeHead(400,'Bad Request product id is missing');
+    }else{
+
+    console.log(req.params.prodId);
+
+    res.writeHead(200,{
+        'Content-Type': 'application/json'
+    })
+    getItemFromLink(req.params.prodId,res);
+    //res.end("Predicting Price....")
+};
 })
 
 const port = process.env.PORT || 3000;
