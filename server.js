@@ -135,7 +135,7 @@ const headers = {
           prediction_value : predictedPrice
       }
       console.log(jsonfinal);
-      resp.write("["+JSON.stringify(jsonfinal)+",");
+      resp.end(JSON.stringify(jsonfinal));
     })
     .catch((error) => {
       console.error(error)
@@ -177,21 +177,21 @@ app.get('/api/getprice/:item',(req,res)=>{
 
         searchTerm = req.params.item;
         console.log(searchTerm);
-
          calculatePrice(searchTerm,res);
-         predictPrice(searchTerm,res);
          
 
 });
 
 app.post('/api/getprediction',(req,res)=>{
     console.log(req.body);
-    res.end("working bro")
+   // res.write("getpredictionworking");
+    predictPrice(searchTerm,res);
+
 });
 
 app.post('/api/getPredictionForLink',(req,res)=>{
-    console.log((req));
-    res.end("Predicting Price....")
+    console.log((req.body));
+    res.write("Predicting Price....")
 })
 
 const port = process.env.PORT || 3000;
