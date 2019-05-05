@@ -3,6 +3,8 @@ const express = require('express');
 const app = express();
 var router = express.Router();
 var eBay = require('ebay-node-api');
+const axios = require('axios')
+
 
 let ebay = new eBay({
     clientID: "pricefin-pricefin-PRD-bf2cd4cf7-bca5e5ee",
@@ -65,6 +67,7 @@ function calculatePrice(searchTerm, res){
 
     
        predictedJson = {
+          item:searchTerm,
           total : total,
           itemCount : itemCount,
           predictedPrice : predictedPrice 
@@ -98,6 +101,54 @@ function calculatePrice(searchTerm, res){
 }
 
 
+function predictPrice(searchTerm,resp){
+
+    const jsonOnj = {
+        "Inputs": {
+                "input1":
+                [
+                    {
+                            "model": "Iphone 8",   
+                            "Brand": "Apple",   
+                            "description": "adsfassf",   
+                            "price": 231,   
+                            "sentiment": 0.67   
+                    }
+                ]
+        },
+    "GlobalParameters":  {
+    }
+};
+
+const api_key = '1rrQMiCh0mu0flJJ/GadWLBfFMPDOnnUQtL2p9HOx5JzFpxle+bOe/r0P8sVQDpvCi6MNOfTxI+eTn7LQztSCg==';
+const headers = {
+   'Content-Type' : "application/json",
+    'Authorization':'Bearer '+ api_key
+};
+    axios.post('https://ussouthcentral.services.azureml.net/workspaces/a76d1fe17471414fa3baf79ffc91c629/services/7d52391e8bf74e7bae50841a36a5d6ae/execute?api-version=2.0&format=swagger', 
+    jsonOnj,{headers:headers})
+    .then((res) => {
+      console.log(`statusCode: ${res.statusCode}`)
+      var prediction = (res.data.Results.output1[0]);
+      predictedPrice = (prediction['Scored Label Mean']);
+      jsonfinal = {
+          prediction_value : predictedPrice
+      }
+      console.log(jsonfinal);
+      resp.write("["+JSON.stringify(jsonfinal)+",");
+    })
+    .catch((error) => {
+      console.error(error)
+    })
+
+    
+
+
+
+
+
+}
+
 
 // function (req,res){
 //     console.log('requested url: ' + req.url);
@@ -126,14 +177,28 @@ app.get('/api/getprice/:item',(req,res)=>{
 
         searchTerm = req.params.item;
         console.log(searchTerm);
-         calculatePrice(searchTerm,res);
 
+         calculatePrice(searchTerm,res);
+         predictPrice(searchTerm,res);
+         
+
+});
+
+app.post('/api/getprediction',(req,res)=>{
+    console.log(req.body);
+    res.end("working bro")
+});
+
+app.post('/api/getPredictionForLink',(req,res)=>{
+    console.log((req));
+    res.end("Predicting Price....")
 })
-const port = process.env.PORT || 4400;
+
+const port = process.env.PORT || 3000;
 
 app.listen(port,()=>{
     console.log(`Listening on port ${port}...`)
-})
+});
 
 // http.createServer((req,res)=>{
 //     if (req.url==='/') {
