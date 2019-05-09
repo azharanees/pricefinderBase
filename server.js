@@ -194,8 +194,8 @@ function getRecommendedProducts(searchTerm, res){
 
 
 
-            var imgageurl = (JSON.stringify(jsonRes[0].searchResult[0].item[searchResult].galleryURL[0]));
-            var urlArray = (JSON.stringify(jsonRes[0].searchResult[0].item[searchResult].viewItemURL[0]));
+            var imgageurl = ((jsonRes[0].searchResult[0].item[searchResult].galleryURL[0]));
+            var urlArray = ((jsonRes[0].searchResult[0].item[searchResult].viewItemURL[0]));
                 
     
             var fPrice = parseFloat(prices.replace(/"/g,''));
